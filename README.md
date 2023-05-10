@@ -16,5 +16,10 @@ gcc lsclone.c -o build/lsclone
 
 In Clion it just works.
 
-TODO: how to build with Cmake in terminal.
+```bash
+cmake -B build
+cmake --build build
+
+./build/lsclone
+```
 
