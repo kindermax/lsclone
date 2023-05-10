@@ -7,6 +7,7 @@
 #include <grp.h>
 #include <time.h>
 #include <locale.h>
+#include <getopt.h>
 
 bool is_hidden(char* value) {
     return strncmp(value, ".", 1) == 0;
@@ -33,7 +34,6 @@ void format_time(struct timespec t, char *buf, int buf_len) {
 }
 
 // TODO: support colors
-// TODO: use getopt or argparse
 // TODO: specify path from args
 // TODO: collect files in an array
 // TODO: support sorting
@@ -45,10 +45,36 @@ int main(int argc, char* argv[]) {
     // --help and --version
     bool is_long = false;
     bool hidden = false;
-    if (argc > 1) {
-        if (strcmp(argv[1], "-l") == 0) {
-            is_long = true;
+    bool help = false;
+    bool version = false;
+
+    int opt;
+    while ((opt = getopt(argc, argv, "alhv")) != -1) {
+        switch (opt) {
+            case 'l':
+                is_long = true;
+                break;
+            case 'a':
+                hidden = true;
+                break;
+            case 'h':
+                help = true;
+            case 'v':
+                version = true;
+            default:
+                break;
         }
+    }
+
+    if (help) {
+        printf("lsclone - simpler ls\n\nUsage: lsclone [la]\n\nOptions:\n\t-a Show hidden files\n\t-l Long format\n");
+        return 0;
+    }
+
+    if (version) {
+        // TODO: how to get a version from git describe?
+        printf("lsclone - 0.0.1\n");
+        return 0;
     }
 
     char* path = ".";
