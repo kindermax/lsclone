@@ -33,8 +33,10 @@ void format_time(struct timespec t, char *buf, int buf_len) {
 }
 
 // TODO: support colors
-// TODO: use getopt
+// TODO: use getopt or argparse
 // TODO: specify path from args
+// TODO: collect files in an array
+// TODO: support sorting
 
 // Simpler implementation of coreutils ls.
 // See: https://github.com/coreutils/coreutils/blob/master/src/ls.c
