@@ -42,7 +42,6 @@ void format_time(struct timespec t, char *buf, int buf_len) {
 // See: https://github.com/coreutils/coreutils/blob/master/src/ls.c
 int main(int argc, char* argv[]) {
     setlocale(LC_ALL, "");
-    // --help and --version
     bool is_long = false;
     bool hidden = false;
     bool help = false;
