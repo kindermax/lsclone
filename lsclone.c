@@ -9,6 +9,7 @@
 #include <locale.h>
 #include <getopt.h>
 
+
 bool is_hidden(char* value) {
     return strncmp(value, ".", 1) == 0;
 }
