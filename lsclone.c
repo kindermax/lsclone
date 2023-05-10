@@ -38,39 +38,49 @@ void format_time(struct timespec t, char *buf, int buf_len) {
 // TODO: collect files in an array
 // TODO: support sorting
 
-// Simpler implementation of coreutils ls.
-// See: https://github.com/coreutils/coreutils/blob/master/src/ls.c
-int main(int argc, char* argv[]) {
-    setlocale(LC_ALL, "");
-    bool is_long = false;
-    bool hidden = false;
-    bool help = false;
-    bool version = false;
+
+struct flags {
+    bool long_format;
+    bool show_hidden;
+    bool show_help;
+    bool show_version;
+};
+
+void parse_flags(struct flags *f, int argc, char* argv[]) {
 
     int opt;
     while ((opt = getopt(argc, argv, "alhv")) != -1) {
         switch (opt) {
             case 'l':
-                is_long = true;
+                f->long_format = true;
                 break;
             case 'a':
-                hidden = true;
+                f->show_hidden = true;
                 break;
             case 'h':
-                help = true;
+                f->show_help = true;
             case 'v':
-                version = true;
+                f->show_version = true;
             default:
                 break;
         }
     }
 
-    if (help) {
+}
+
+// Simpler implementation of coreutils ls.
+// See: https://github.com/coreutils/coreutils/blob/master/src/ls.c
+int main(int argc, char* argv[]) {
+    setlocale(LC_ALL, "");
+    struct flags flags;
+    parse_flags(&flags, argc, argv);
+
+    if (flags.show_help) {
         printf("lsclone - simpler ls\n\nUsage: lsclone [la]\n\nOptions:\n\t-a Show hidden files\n\t-l Long format\n");
         return 0;
     }
 
-    if (version) {
+    if (flags.show_version) {
         // TODO: how to get a version from git describe?
         printf("lsclone - 0.0.1\n");
         return 0;
@@ -95,11 +105,11 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        if (is_hidden(entry->d_name) && !hidden) {
+        if (is_hidden(entry->d_name) && !flags.show_hidden) {
             continue;
         }
 
-        if (is_long) {
+        if (flags.long_format) {
             struct stat file_stat;
             stat(entry->d_name, &file_stat);
 
